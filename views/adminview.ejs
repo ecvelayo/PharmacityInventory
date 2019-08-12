@@ -1,0 +1,103 @@
+<% include templates/header.ejs %>
+<style>
+.center{
+    margin: auto;
+    width: 50%;
+    text-align:center;
+}
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #4CAF50;
+  color: white;
+}
+.logo-img {
+    height: auto;
+    width: auto;
+    max-height: 100px;
+    max-width: 150px;
+    float: left;
+    position: relative;
+}
+</style>
+<div class="topnav">
+    <img class="logo-img" src="/images/inventory-management-system-logo.png" alt="logo">
+  <a class="active" href="#home">Home</a>
+  <a href="products">Products</a>
+  <a href="transactions">Transactions</a>
+</div>
+<br><br><br>
+<table class="center table-bordered text-center">
+<tr>
+    <th>Product Name</th>
+    <th>Category</th>
+    <th>Generic Name</th>
+    <th>Current Stock</th>
+    <th>Purchase Price</th>
+    <th>Selling Supplier</th>
+    <th>Product Supplier</th>
+    <th>Expiration Date</th>
+</tr>
+<% for (var i = 0; i <data.length; i++){%>
+<tr>
+    <td><%=data[i].product_id%></td>
+    <td><%=data[i].product_category%></td>
+    <td><%=data[i].prod_generic_name%></td>
+    <td><%=data[i].current_quantity%></td>
+    <td><%=data[i].purchase_price%></td>
+    <td><%=data[i].selling_price%></td>
+    <td><%=data[i].product_supplier%></td>
+    <td><%=data[i].expiration_date%></td>
+    <%if (data[i].current_quantity <= 10){%>
+        <% var deplete = true; %>
+    <%}%>
+</tr>
+<%}%>
+<% if (deplete){%>
+</table>
+<table class="center table-bordered text-center">
+    <br><br>
+    <h1 class="text-center">Almost Out of Stock</h1>
+    <tr>
+        <th>Product Name</th>
+        <th>Description</th>
+        <th>Price</th>
+        <th>Current Stock</th>
+        <th>Model Number</th>
+        <th>Date Arrived</th>
+        <th>Current Number Sold</th>
+    </tr>
+    <% for (var i=0; i< data.length; i++){%>
+        <% if (data[i].stock <= 5){%>
+            <tr>
+                <td><%=data[i].name%></td>
+                <td><%=data[i].description%></td>
+                <td><%=data[i].price%></td>
+                <td><%=data[i].stock%></td>
+                <td><%=data[i].model%></td>
+                <td><%=data[i].date_arrived%></td>
+                <td><%=data[i].sold%></td>
+            </tr>
+        <%}%>
+            
+    <%}%>
+</table>
+<%}%>
+<% include templates/footer.ejs %>

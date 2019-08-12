@@ -57,26 +57,28 @@
 <table class="center table-bordered text-center" id="products">
 <thead>
 <tr>
-    <th>Product Name</th>
-    <th>Description</th>
-    <th>Price</th>
-    <th>Current Stock</th>
-    <th>Model Number</th>
-    <th>Date Arrived</th>
-    <th>Current Number Sold</th>
-    <th>Options</th>
+    <th style="background:#33ccff">Product Name</th>
+    <th style="background:#33ccff">Category</th>
+    <th style="background:#33ccff">Generic Name</th>
+    <th style="background:#33ccff">Current Stock</th>
+    <th style="background:#33ccff">Purchase Price</th>
+    <th style="background:#33ccff">Selling Supplier</th>
+    <th style="background:#33ccff">Product Supplier</th>
+    <th style="background:#33ccff">Expiration Date</th>
+    <th style="background:#33ccff">Options</th>
 </tr>
 </thead>
 <% for (var i = 0; i <data.length; i++){%>
 <tbody>
 <tr id=<%=i%>>
-    <td class="name"><%=data[i].name%></td>
-    <td class="description"><%=data[i].description%></td>
-    <td class="price"><%=data[i].price%></td>
-    <td class="stock"><%=data[i].stock%></td>
-    <td class="model"><%=data[i].model%></td>
-    <td><%=data[i].date_arrived%></td>
-    <td><%=data[i].sold%></td>
+    <td><%=data[i].product_name%></td>
+    <td><%=data[i].product_category%></td>
+    <td><%=data[i].prod_generic_name%></td>
+    <td><%=data[i].current_quantity%></td>
+    <td><%=data[i].purchase_price%></td>
+    <td><%=data[i].selling_price%></td>
+    <td><%=data[i].product_supplier%></td>
+    <td><%=data[i].expiration_date%></td>
     <td><div class="inline"><button class="btn btn-info edititem" data-id=<%=data[i].id%> data-toggle="modal" data-target="#editModal">Edit</button><button class="deleteItem btn btn-warning" data-id="<%= data[i].id %>" data-toggle="modal" data-target="#confirm-delete">Delete</button></div></td>
 </tr>
 <%}%>
@@ -98,23 +100,35 @@
       <div class="modal-body">
             <div class="form-group">
                 <label for="productname">Product Name</label>
-                <input type="text" class="form-control" name="productname" value="" placeholder="Product Name">
+                <input type="text" class="form-control" name="productname" value="" placeholder="Input product name" required>
             </div>
             <div class="form-group">
-                <label for="description">Description</label>
-                <input type="text" class="form-control" name="description" value="" placeholder="Item Description">
+                <label for="productcategory">Product Category</label>
+                <input type="text" class="form-control" name="productcategory" value="" placeholder="Input category of product" required>
             </div>
             <div class="form-group">
-                <label for="stock">Total Stock Available</label>
-                <input type="text" class="form-control" name="stock" placeholder="Number of items">
+                <label for="genericname">Generic Name</label>
+                <input type="text" class="form-control" name="genericname" placeholder="Input NA if product does not have generic name" required>
             </div>          
             <div class="form-group">
-                <label for="price">Price</label>
-                <input type="text" class="form-control" name="price" placeholder="Price of items">
+                <label for="quantity">Quantity</label>
+                <input type="text" class="form-control" name="quantity" placeholder="Input number of items" required>
             </div>
             <div class="form-group">
-                <label for="model">Model Number</label>
-                <input type="text" class="form-control" name="model" placeholder="Model Number">
+                <label for="purchaseprice">Purchasing Price</label>
+                <input type="number" min=0 step="0.01" class="form-control" name="purchaseprice" placeholder="Input price upon purchase" required>
+            </div>
+            <div class="form-group">
+                <label for="sellingprice">Selling Price</label>
+                <input type="number" min=0 step="0.01" class="form-control" name="sellingprice" placeholder="Input selling price" required>
+            </div>
+            <div class="form-group">
+                <label for="expiry">Date Expiry</label>
+                <input type="text" class="form-control" id="datepicker" name="expiry" placeholder="Click to show datepicker" required >
+            </div>
+            <div class="form-group">
+                <label for="supplier">Product Supplier</label>
+                <input type="text" class="form-control" name="supplier" placeholder="Input product supplier" required>
             </div>
       </div>
       <div class="modal-footer">

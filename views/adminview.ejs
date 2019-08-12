@@ -2,7 +2,7 @@
 <style>
 .center{
     margin: auto;
-    width: 50%;
+    width: 100%;
     text-align:center;
 }
 .topnav {
@@ -36,6 +36,20 @@
     float: left;
     position: relative;
 }
+.topleft {
+    position: fixed;
+    width: 50%;
+    height: 30%;
+    top: 10%;
+    left: 3%;
+    border: active;
+}
+.tabletopleft{
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow-y: scroll;
+}
 </style>
 <div class="topnav">
     <img class="logo-img" src="/images/inventory-management-system-logo.png" alt="logo">
@@ -44,20 +58,30 @@
   <a href="transactions">Transactions</a>
 </div>
 <br><br><br>
-<table class="center table-bordered text-center">
+<!--
+<div class="topnav">
+<h2>Hello, Admin!</h2>
+</div>
+-->
+<div class="topleft">
+    <br><h1 class="center" style="background:#ff4d4d">Check Stocks</h1>
+    <% if (data.length <= 0) {%>
+        <h1>No warnings.</h1>
+    <%}else {%>
+<table class="center table-bordered text-center tabletopleft">    
 <tr>
-    <th>Product Name</th>
-    <th>Category</th>
-    <th>Generic Name</th>
-    <th>Current Stock</th>
-    <th>Purchase Price</th>
-    <th>Selling Supplier</th>
-    <th>Product Supplier</th>
-    <th>Expiration Date</th>
+    <th style="background:#33ccff">Product Name</th>
+    <th style="background:#33ccff">Category</th>
+    <th style="background:#33ccff">Generic Name</th>
+    <th style="background:#33ccff">Current Stock</th>
+    <th style="background:#33ccff">Purchase Price</th>
+    <th style="background:#33ccff">Selling Supplier</th>
+    <th style="background:#33ccff">Product Supplier</th>
+    <th style="background:#33ccff">Expiration Date</th>
 </tr>
 <% for (var i = 0; i <data.length; i++){%>
 <tr>
-    <td><%=data[i].product_id%></td>
+    <td><%=data[i].product_name%></td>
     <td><%=data[i].product_category%></td>
     <td><%=data[i].prod_generic_name%></td>
     <td><%=data[i].current_quantity%></td>
@@ -65,39 +89,8 @@
     <td><%=data[i].selling_price%></td>
     <td><%=data[i].product_supplier%></td>
     <td><%=data[i].expiration_date%></td>
-    <%if (data[i].current_quantity <= 10){%>
-        <% var deplete = true; %>
-    <%}%>
 </tr>
 <%}%>
-<% if (deplete){%>
-</table>
-<table class="center table-bordered text-center">
-    <br><br>
-    <h1 class="text-center">Almost Out of Stock</h1>
-    <tr>
-        <th>Product Name</th>
-        <th>Description</th>
-        <th>Price</th>
-        <th>Current Stock</th>
-        <th>Model Number</th>
-        <th>Date Arrived</th>
-        <th>Current Number Sold</th>
-    </tr>
-    <% for (var i=0; i< data.length; i++){%>
-        <% if (data[i].stock <= 5){%>
-            <tr>
-                <td><%=data[i].name%></td>
-                <td><%=data[i].description%></td>
-                <td><%=data[i].price%></td>
-                <td><%=data[i].stock%></td>
-                <td><%=data[i].model%></td>
-                <td><%=data[i].date_arrived%></td>
-                <td><%=data[i].sold%></td>
-            </tr>
-        <%}%>
-            
-    <%}%>
 </table>
 <%}%>
 <% include templates/footer.ejs %>

@@ -20,44 +20,43 @@ module.exports = function(app){
             connection.query(sql, [req.body.username, req.body. password], function(err, fields){
                 if (err) throw err;
                 if (fields[0].account_type == "admin"){
-                    var sql ="SELECT * FROM inventory";
-                    connection.query(sql, function(err, result){
-                        console.log(result);
-                        res.render("adminview", {data:result})
-                    })
+                        res.redirect("/home");
                 }
             });
         })
         app.get("/home", urlencodedParser, function(req, res){
-            var sql ="SELECT * FROM products";
+            var sql ="SELECT * FROM inventory ORDER BY current_quantity";
             connection.query(sql, function(err, result){
                 res.render("adminview", {data:result})
             });
         });
         app.get("/products", function(req, res){
-            var sql = "SELECT * FROM products";
+            var sql = "SELECT * FROM inventory ORDER BY product_name";
             connection.query(sql, function(err, result){
+                console.log(result);
                 res.render("productview", {data:result});
             });
         })
         //add new row to table
         //adds new product to the products table
         app.post("/products", urlencodedParser, function(req, res){
-            var sql = "INSERT INTO products SET ?" ;
+            var sql = "INSERT INTO inventory SET ?" ;
             var insert = {
-                name: req.body.productname,
-                description: req.body.description,
-                price: req.body.price,
-                stock: req.body.stock,
-                model: req.body.model
+                product_name: req.body.productname,
+                product_category: req.body.productcategory,
+                prod_generic_name: req.body.genericname,
+                current_quantity: req.body.quantity,
+                purchase_price: req.body.purchaseprice,
+                selling_price: req.body.sellingprice,
+                product_supplier: req.body.supplier,
+                expiration_date: req.body.expiry
             }
+            insert.purchase_price = parseFloat(insert.purchase_price);
             connection.query(sql, insert, function(err, result){
                 if (err) throw err;
-                connection.query("SELECT * FROM products", function(err, result){
-                    res.render("productview", {data:result});
-                })
+                console.log(typeof insert.purchase_price);
             })
-            res.redirect('/products');
+            res.redirect("/products");
         })
         app.post("/productsupdate", urlencodedParser, function(req, res){
             var sql = "SELECT * FROM products WHERE id = ?";

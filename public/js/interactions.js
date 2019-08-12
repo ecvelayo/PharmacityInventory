@@ -33,6 +33,15 @@ $(document).ready(function(){
         $("#sellingprice").val(cur.find("td:eq(5)").text());
         $("#productsupplier").val(cur.find("td:eq(6)").text());
     })
+    $( function(){
+        $("#datepicker").datepicker({
+            dateFormat: "yy-mm-dd",
+            beforeShow: function(input, inst)
+            {
+                inst.dpDiv.css({marginTop: -input.offsetHeight + 'px', marginLeft: input.offsetWidth + 'px'});
+            }
+        });
+    });
 //        console.log("Row is " + $(this).closest("td").parent()[0].sectionRowIndex);
 //        console.log($(this).closest("td").parent()[0].sectionRowIndex);
 //        var $row = jQuery(this).closest("tr");

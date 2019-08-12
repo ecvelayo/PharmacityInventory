@@ -20,6 +20,7 @@ $(document).ready(function(){
 
     })
     //access data in table cells to autofill in edit product modal
+    //accessing the data in the existing table in HTML
     $("table tbody").on("click", ".edititem", function(){
         var cur = $(this).closest("tr");
         var pass = ($(this).data("id"));

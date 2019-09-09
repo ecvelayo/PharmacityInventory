@@ -119,27 +119,28 @@ module.exports = function(app){
             })
 
         })
-        app.post("/addtransaction", urlencodedParser, function(req,res){
+        app.post("/addtransactions", urlencodedParser, function(req,res){
+            console.log(req.body);
             var sql = "INSERT INTO transaction SET ?";
             var insert = {
                 user_id: 1,
                 customer_id: 1,
-                product_id: req.body.item_choice,
-                quantity:req.body.noOfItems
+                product_id: req.body.item[0],
+                quantity:req.body.quantity[0]
             }
-            connection.query(sql, insert, function(err, result){
-                var sql = "SELECT * FROM product WHERE product_id ='"+req.body.item_choice+"'";
-
-                connection.query(sql, function(err, result){
-                    if (err) throw err;
-
-                    var sql1 = "UPDATE product SET current_quantity = " +(result[0].current_quantity- parseInt(req.body.noOfItems)) +", sold =" + (result[0].sold+ parseInt(req.body.noOfItems)) + " WHERE product_id =" + req.body.item_choice;
-                     connection.query(sql1, function(err, result){
-                       console.log(result);
-                 })
-
-                    })
-                })
+//            connection.query(sql, insert, function(err, result){
+//                var sql = "SELECT * FROM product WHERE product_id ='"+req.body.item_choice+"'";
+//
+//                connection.query(sql, function(err, result){
+//                    if (err) throw err;
+//                    console.log(result);
+//                    var sql1 = "UPDATE product SET current_quantity = " +(result[0].current_quantity- parseInt(req.body.noOfItems)) +", sold =" + (result[0].sold+ parseInt(req.body.noOfItems)) + " WHERE product_id =" + req.body.item_choice;
+//                     connection.query(sql1, function(err, result){
+//                         console.log(result);
+//                 })
+//
+//                    })
+//                })
             res.redirect('/transactions');
         })
 

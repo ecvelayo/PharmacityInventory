@@ -73,7 +73,7 @@
     <td><%=data[i].prod_generic_name%></td>
     <td><%=data[i].current_quantity%></td>
     <td><%=data[i].selling_price%></td>
-    <td><div class="inline"><button class="btn btn-info edititem" data-id=<%=data[i].id%> data-toggle="modal" data-target="#editModal">Edit</button><button class="deleteItem btn btn-warning" data-id="<%= data[i].product_id %>" data-toggle="modal" data-target="#confirm-delete">Delete</button></div></td>
+    <td><div class="inline"><button class="btn btn-info edititem" data-id="<%=data[i].id%>" data-toggle="modal" data-target="#editModal">Edit</button><button class="deleteItem btn btn-warning" data-id="<%= data[i].product_id %>" data-toggle="modal" data-target="#confirm-delete">Delete</button></div></td>
 </tr>
 <%}%>
 </tbody>

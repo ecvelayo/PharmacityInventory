@@ -19,6 +19,37 @@ $(document).ready(function(){
 
 
     })
+    $("#additemtransaction").click(function(){
+       var myTable=document.getElementById("cart").getElementsByTagName("tbody")[0];
+       var newRow = myTable.insertRow();
+       var newcell1 = newRow.insertCell(0);
+       var newcell2 = newRow.insertCell(1);
+       newcell1.innerHTML = document.getElementById("item").value;
+       newcell2.innerHTML = document.getElementById("quantity").value;
+    })
+    $("#passlist").click(function(){
+        var EntryRowCount = ($("#cart td").closest("tr").length);
+        var table = "#cart tr";
+        var x = 0;
+        var items = [];
+        var quantity = [];
+        for (var i=0; i < EntryRowCount; i++){
+            items.push($(table).find("td").eq(x).html());
+            quantity.push($(table).find("td").eq(x+1).html());
+            x = x+2;
+        }
+        var objectpassable = {};
+        objectpassable.item = items;
+        objectpassable.quantity = quantity;
+        $.ajax({
+            type: "POST",
+            url: "addtransactions",
+            data: objectpassable
+        });
+        $(document).ajaxStop(function(){
+            window.location.reload();
+        })
+    })
     //access data in table cells to autofill in edit product modal
     //accessing the data in the existing table in HTML
     $("table tbody").on("click", ".edititem", function(){

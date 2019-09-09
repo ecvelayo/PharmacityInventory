@@ -1,0 +1,32 @@
+<% include templates/header.ejs %>
+<h1 class="text-center">Inventory Management System</h1>
+<!--Modal version of Login-->
+<!-- Button trigger modal -->
+<img class="button" src="/images/inventory-management-system-logo.png" alt="logo">
+<br><br><br>
+<style>
+    .button {
+        margin: auto;
+        display: block;
+    }
+    form{
+        margin: auto;
+        display: inline-block;
+    }
+    body{
+        text-align: center;
+    }
+</style>
+<form method="POST" action="/login">
+    <p> 
+        <label class="font-weight-bold">Username: </label>
+        <input type="text" name="username">
+    </p>
+    <p>
+        <label class="font-weight-bold">Password: </label>
+        <input type="password" name="password">
+    </p>
+    <p>
+        <input class="btn btn-primary" type="submit" value="Login"/>
+    </p>
+</form>

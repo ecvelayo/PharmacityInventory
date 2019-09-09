@@ -1,0 +1,96 @@
+<% include templates/header.ejs %>
+<style>
+.center{
+    margin: auto;
+    width: 100%;
+    text-align:center;
+}
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #4CAF50;
+  color: white;
+}
+.logo-img {
+    height: auto;
+    width: auto;
+    max-height: 100px;
+    max-width: 150px;
+    float: left;
+    position: relative;
+}
+.topleft {
+    position: fixed;
+    width: 50%;
+    height: 30%;
+    top: 10%;
+    left: 3%;
+    border: active;
+}
+.tabletopleft{
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow-y: scroll;
+}
+</style>
+<div class="topnav">
+    <img class="logo-img" src="/images/inventory-management-system-logo.png" alt="logo">
+  <a class="active" href="#home">Home</a>
+  <a href="products">Products</a>
+  <a href="transactions">Transactions</a>
+</div>
+<br><br><br>
+<!--
+<div class="topnav">
+<h2>Hello, Admin!</h2>
+</div>
+-->
+<div class="topleft">
+    <br><h1 class="center" style="background:#ff4d4d">Check Stocks</h1>
+    <% if (data.length <= 0) {%>
+        <h1>No warnings.</h1>
+    <%}else {%>
+<table class="center table-bordered text-center tabletopleft">    
+<tr>
+    <th style="background:#33ccff">Product Name</th>
+    <th style="background:#33ccff">Category</th>
+    <th style="background:#33ccff">Generic Name</th>
+    <th style="background:#33ccff">Current Stock</th>
+    <th style="background:#33ccff">Purchase Price</th>
+    <th style="background:#33ccff">Selling Supplier</th>
+    <th style="background:#33ccff">Product Supplier</th>
+    <th style="background:#33ccff">Expiration Date</th>
+</tr>
+<% for (var i = 0; i <data.length; i++){%>
+<tr>
+    <td><%=data[i].product_name%></td>
+    <td><%=data[i].product_category%></td>
+    <td><%=data[i].prod_generic_name%></td>
+    <td><%=data[i].current_quantity%></td>
+    <td><%=data[i].purchase_price%></td>
+    <td><%=data[i].selling_price%></td>
+    <td><%=data[i].product_supplier%></td>
+    <td><%=data[i].expiration_date%></td>
+</tr>
+<%}%>
+</table>
+<%}%>
+<% include templates/footer.ejs %>

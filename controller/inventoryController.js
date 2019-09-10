@@ -7,8 +7,8 @@ module.exports = function(app){
         host: "127.0.0.1",
         //socketPath: "/cloudsql/resolute-land-249012:asia-east1:inventory",
         user: "root",
-        password: "",//r00m12@ctual
-        database: "inventory2"
+        password: "r00m12@ctual",
+        database: "inventory2-1"
     });
     connection.connect(function(err){
         if (err) throw err;
@@ -33,7 +33,6 @@ module.exports = function(app){
         app.get("/products", function(req, res){
             var sql = "SELECT * FROM product ORDER BY product_name";
             connection.query(sql, function(err, result){
-                console.log(result);
                 res.render("productview", {data:result});
             });
         })
@@ -121,7 +120,7 @@ module.exports = function(app){
 
         })
         app.post("/addtransactions", urlencodedParser, function(req,res){
-            //console.log(req.body);
+            console.log(req.body);
             let datas = JSON.parse(req.body);
             // var sql = "INSERT INTO transaction SET ?";
             // var insert = {

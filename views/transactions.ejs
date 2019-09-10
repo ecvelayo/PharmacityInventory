@@ -180,7 +180,7 @@
 
 
       <div class="modal-footer">
-          <input type="button" id="passlist" value="Proceed with Transaction"/>
+          <input type="button" value="Add To Cart"/>
       </div>
 
     </div>
@@ -226,22 +226,10 @@
 </div>
 
 <script>
-$(document).ready(function(){
-  console.log("asdada");
-  $("#item").on("keyup", function() {
-    var value = $(this).val().toLowerCase();
-    $("#myTable tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    });
-  });
-});
-
 function add2Cart(name,stock){
-            var markup = "<tr><td>"+name+"</td><td><input type='number' id='1' value='1' min='1' max='"+stock+"' /></td></tr>";
+            var markup = "<tr><td>"+name+"</td><td><input type='number' min='1' max='"+stock+"' /></td></tr>";
             $("#cartTable").append(markup);
 };
-
-
 </script>
 
 <% include templates/footer.ejs %>

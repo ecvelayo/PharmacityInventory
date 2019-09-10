@@ -19,6 +19,12 @@ $(document).ready(function(){
 
 
     })
+    $("#item").on("keyup", function(){
+        var value = $(this).val().toLowerCase();
+        $("#myTable tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
     $("#additemtransaction").click(function(){
        var myTable=document.getElementById("cart").getElementsByTagName("tbody")[0];
        var newRow = myTable.insertRow();
@@ -28,16 +34,18 @@ $(document).ready(function(){
        newcell2.innerHTML = document.getElementById("quantity").value;
     })
     $("#passlist").click(function(){
-        var EntryRowCount = ($("#cart td").closest("tr").length);
-        var table = "#cart tr";
-        var x = 0;
+        var EntryRowCount = ($("#cartTable td").closest("tr").length);
+        var table = "#cartTable tr";
+        var x = 1;
         var items = [];
         var quantity = [];
         for (var i=0; i < EntryRowCount; i++){
-            items.push($(table).find("td").eq(x).html());
-            quantity.push($(table).find("td").eq(x+1).html());
+            //items.push($(table).find("td").eq(x).html());
+            quantity.push($(table).find("td:eq("+x+") input[type='number']").val());
+            console.log(quantity[i]);
             x = x+2;
         }
+        //can access data only in first input cell in cartTable. Find way to access data on all value cells.
         var objectpassable = {};
         objectpassable.item = items;
         objectpassable.quantity = quantity;
@@ -47,7 +55,6 @@ $(document).ready(function(){
             data: objectpassable
         });
         $(document).ajaxStop(function(){
-            window.location.reload();
         })
     })
     //access data in table cells to autofill in edit product modal

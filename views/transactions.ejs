@@ -124,43 +124,84 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add New Transaction</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Item Search</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-    <form role="form" method="POST" action="/addtransaction">
+
       <div class="modal-body">
-                <label for="productname">Customer Name</label>
-                <input type="text" class="form-control" name="customerName" placeholder="Enter customer's name">
-<!--
+
+<!--<form role="form" method="POST" action="/addtransaction">
             </div>
             <div class="form-group inline dropdown">
                 <label for="description">Item</label>
                 <select id="choices" name="item_choice">
 
                     <% //for (var i = 0; i<data[1].length;i++){
-                      products.forEach(function(product){%>
-                    <option value = <%=product.product_id%>>
-                        <%=product.product_name%>
+                      //products.forEach(function(product){%>
+                    </option value = <%=//product.product_id%>>
+                        <%=//product.product_name%>
                     </option>
-                    <%})%>
+                    <%//})%>
                 </select>
-            </div>            
+            </div>
             <div class="form-group inline">
                 <input type="text" class="form-control" name="noOfItems" placeholder="Number of items">
             </div>
 -->
-                
+
         <div class="row">
             <div class="col-sm-6">
                 <label for="items">Items</label>
                 <input type="text" class="form-control" name="item" id="item" placeholder="Enter item">
             </div>
-            <div class="col-sm-6">
-                <label for="items">Quantity</label>
-                <input type="text" class="form-control" name="quantity" id="quantity" placeholder="Enter item quantity">
-            </div>
+
+        </div>
+      <br>
+      <table class="center table-bordered text-center" id="cart">
+        <thead>
+            <th>Product Name</th>
+            <th>In Stock</th>
+        </thead>
+        <tbody id="myTable">
+          <%products.forEach(function(oneD){%>
+          <tr>
+            <td><%=oneD.product_name%></td>
+            <td><%=oneD.current_quantity%></td>
+            <td><button class="add-roww" onclick="add2Cart('<%=oneD.product_name%>' ,<%=oneD.current_quantity%> );" >Add</button></td>
+          </tr>
+
+          <%});%>
+        </tbody>
+      </table>
+<!--</form>Changing Transaction Type to suit multiple items at once-->
+      </div>
+
+
+      <div class="modal-footer">
+          <input type="button" id="passlist" value="Proceed with Transaction"/>
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Cart</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+                <label for="productname">Customer Name</label>
+                <input type="text" class="form-control" name="customerName" placeholder="Enter customer's name">
+        <div class="row">
+
+
         </div>
       <br>
       <table class="center table-bordered text-center" id="cart">
@@ -168,18 +209,39 @@
             <th>Product Name</th>
             <th>Quantity</th>
         </thead>
-        <tbody>
+        <tbody id="cartTable">
+
         </tbody>
       </table>
-<!--Changing Transaction Type to suit multiple items at once-->
+<!--</form>Changing Transaction Type to suit multiple items at once-->
       </div>
 
-      <input type="button" id="additemtransaction" value="Add Item">
+
       <div class="modal-footer">
           <input type="button" id="passlist" value="Proceed with Transaction"/>
       </div>
-        </form>
+
     </div>
   </div>
 </div>
+
+<script>
+$(document).ready(function(){
+  console.log("asdada");
+  $("#item").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#myTable tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+
+function add2Cart(name,stock){
+            var markup = "<tr><td>"+name+"</td><td><input type='number' id='1' value='1' min='1' max='"+stock+"' /></td></tr>";
+            $("#cartTable").append(markup);
+};
+
+
+</script>
+
 <% include templates/footer.ejs %>

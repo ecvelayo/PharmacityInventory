@@ -7,8 +7,8 @@ module.exports = function(app){
         host: "127.0.0.1",
         //socketPath: "/cloudsql/resolute-land-249012:asia-east1:inventory",
         user: "root",
-        password: "r00m12@ctual",//r00m12@ctual
-        database: "inventory2-1"
+        password: "",//r00m12@ctual
+        database: "inventory2"
     });
     connection.connect(function(err){
         if (err) throw err;
@@ -94,6 +94,7 @@ module.exports = function(app){
                   sold : result[0].sold
                 };
                 connection.query(sql1, insert, function(err, result){
+                  console.log("------------------qweqweqweq-weq-e-qe-qe-qe--");
                     var sql = "DELETE FROM product WHERE product_id = ?";
                     connection.query(sql, req.body.id, function(err, result){
                         // connection.query("SELECT * FROM products", function(err,result){
@@ -120,14 +121,37 @@ module.exports = function(app){
 
         })
         app.post("/addtransactions", urlencodedParser, function(req,res){
-            console.log(req.body);
-            var sql = "INSERT INTO transaction SET ?";
-            var insert = {
-                user_id: 1,
-                customer_id: 1,
-                product_id: req.body.item[0],
-                quantity:req.body.quantity[0]
-            }
+            //console.log(req.body);
+            let datas = JSON.parse(req.body);
+            // var sql = "INSERT INTO transaction SET ?";
+            // var insert = {
+            //     user_id: 1,
+            //     customer_id: 1,
+            //     product_id: req.body.item[0],
+            //     quantity:req.body.quantity[0]
+            // }
+            datas.forEach(function(data){
+              var user_id = 1;
+              var cust_id = 0;
+              if(data.customer_id != NULL){
+                cust_id = data.customer_id;
+              }
+              var sql = "INSERT INTO transaction VALUES('"+user_id+"','"+cust_id+"','"+data.product_id+"','"+data.quantity+"')";
+              connection.query(sql, function(err, result){
+               if (err) throw err;
+              // console.log(result);
+              var sql2 = "SELECT * FROM product WHERE product_id = "+data.product_id;
+              connection.query(sql2, function(err, result2){
+
+               var sql3 = "UPDATE product SET current_quantity = " +(result2[0].current_quantity- parseInt(data.quantity)) +", sold =" + (result2[0].sold+ parseInt(data.quantity)) + " WHERE product_id =" + result2[0].product_id;
+                connection.query(sql3, function(err, result3){
+                    console.log(result);
+            });
+          });
+            });
+          });
+
+
 //            connection.query(sql, insert, function(err, result){
 //                var sql = "SELECT * FROM product WHERE product_id ='"+req.body.item_choice+"'";
 //
@@ -142,7 +166,7 @@ module.exports = function(app){
 //                    })
 //                })
             res.redirect('/transactions');
-        })
+        });
 
 
 //         app.get("/deletee", function(req,res){
@@ -173,5 +197,5 @@ module.exports = function(app){
 //             res.redirect('/home');
 //        })
 
-    })
+});
 }

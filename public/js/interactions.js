@@ -34,17 +34,16 @@ $(document).ready(function(){
        newcell2.innerHTML = document.getElementById("quantity").value;
     })
     $("#passlist").click(function(){
-        var EntryRowCount = ($("#cartTable td").closest("tr").length);
+        var EntryRowCount = ($("#cartTable td").closest("tr").length)*2;
         var table = "#cartTable tr";
         var x = 1;
         var items = [];
         var quantity = [];
-        for (var i=0; i < EntryRowCount; i++){
-            //items.push($(table).find("td").eq(x).html());
-            quantity.push($(table).find("td:eq("+x+") input[type='number']").val());
-            console.log(quantity[i]);
-            x = x+2;
-        }
+        $(table).each(function(){
+            $(this).find("input").each(function(){
+                quantity.push($(this).val());
+            })
+        })
         //can access data only in first input cell in cartTable. Find way to access data on all value cells.
         var objectpassable = {};
         objectpassable.item = items;

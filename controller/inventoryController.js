@@ -107,64 +107,41 @@ module.exports = function(app){
         app.get("/transactions", function(req, res){
 
             //var sql = "SELECT T.quantity, S.selling_price, CQ.current_quantity, C.name,A.username FROM [transaction] T JOIN customer C ON T.ID";
-            var sql = "SELECT customer.name,accounts.username,product.product_name,product.selling_price,product.prod_generic_name,transaction.date,transaction.quantity FROM product,transaction,customer,accounts WHERE transaction.customer_id = customer.id AND transaction.user_id = accounts.account_id AND transaction.product_id = product.product_id";
+            var sql = "SELECT * FROM transaction";
             //
             var sql1 = "SELECT * FROM product";
             connection.query(sql, function(err,result){
               //console.log(result);
               connection.query(sql1, function(err,result1){
-
                 res.render("transactions", {data:result, products:result1});
-              })
-            })
+              });
+            });
 
-        })
+        });
         app.post("/addtransactions", urlencodedParser, function(req,res){
-            console.log(req.body);
-            let datas = JSON.parse(req.body);
-            // var sql = "INSERT INTO transaction SET ?";
-            // var insert = {
-            //     user_id: 1,
-            //     customer_id: 1,
-            //     product_id: req.body.item[0],
-            //     quantity:req.body.quantity[0]
-            // }
-            datas.forEach(function(data){
-              var user_id = 1;
-              var cust_id = 0;
-              if(data.customer_id != NULL){
-                cust_id = data.customer_id;
-              }
-              var sql = "INSERT INTO transaction VALUES('"+user_id+"','"+cust_id+"','"+data.product_id+"','"+data.quantity+"')";
-              connection.query(sql, function(err, result){
-               if (err) throw err;
-              // console.log(result);
-              var sql2 = "SELECT * FROM product WHERE product_id = "+data.product_id;
-              connection.query(sql2, function(err, result2){
+            var name = req.body.customerName.toLowerCase();
+            var sql = "INSERT INTO transaction SET ?;";
+            var sql1 = "";
+            var inserted = 0;
+            var set = {
+                user_id: 1,
+                customer_name: name
+            }
+            connection.query(sql, set, function(err, result){
+                inserted = result.insertId;
+                var sql = "INSERT INTO transactionitems SET ?;"
+                for (var i=0; i < req.body['quantity[]'].length; i++){
 
-               var sql3 = "UPDATE product SET current_quantity = " +(result2[0].current_quantity- parseInt(data.quantity)) +", sold =" + (result2[0].sold+ parseInt(data.quantity)) + " WHERE product_id =" + result2[0].product_id;
-                connection.query(sql3, function(err, result3){
-                    console.log(result);
-            });
-          });
-            });
-          });
-
-
-//            connection.query(sql, insert, function(err, result){
-//                var sql = "SELECT * FROM product WHERE product_id ='"+req.body.item_choice+"'";
-//
-//                connection.query(sql, function(err, result){
-//                    if (err) throw err;
-//                    console.log(result);
-//                    var sql1 = "UPDATE product SET current_quantity = " +(result[0].current_quantity- parseInt(req.body.noOfItems)) +", sold =" + (result[0].sold+ parseInt(req.body.noOfItems)) + " WHERE product_id =" + req.body.item_choice;
-//                     connection.query(sql1, function(err, result){
-//                         console.log(result);
-//                 })
-//
-//                    })
-//                })
-            res.redirect('/transactions');
+                    var set = {
+                        transaction_id: inserted,
+                        item: req.body['item[]'][i],
+                        quantity: req.body['quantity[]'][i]
+                    }
+                    connection.query(sql, set, function(err, result){
+                        if (err) throw err;
+                    })
+                }
+            })
         });
 
 
@@ -196,5 +173,5 @@ module.exports = function(app){
 //             res.redirect('/home');
 //        })
 
-});
-}
+    });
+};

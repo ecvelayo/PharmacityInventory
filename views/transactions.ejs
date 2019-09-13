@@ -58,24 +58,11 @@
 <tr>
     <th>User</th>
     <th>Customer</th>
-    <th>Item</th>
-    <th>Generic Name</th>
-    <th>Price</th>
-    <th>Quantity</th>
-    <th>Date Sold</th>
 </tr>
-<% //for (var i = 0; i <= data[i].length; i++){
-  data.forEach(function(dataa){
-
-  %>
+<%data.forEach(function(dataa){%>
 <tr>
-    <td><%=dataa.name%></td>
-    <td><%=dataa.username%></td>
-    <td><%=dataa.product_name%></td>
-    <td><%=dataa.prod_generic_name%></td>
-    <td><%=dataa.selling_price%></td>
-    <td><%=dataa.quantity%></td>
-    <td><%=dataa.date%></td>
+    <td><%=dataa.user_id%></td>
+    <td><%=dataa.customer_name%></td>
 </tr>
 <%})
 //}%>
@@ -198,7 +185,7 @@
 
       <div class="modal-body">
                 <label for="productname">Customer Name</label>
-                <input type="text" class="form-control" name="customerName" placeholder="Enter customer's name">
+                <input type="text" class="form-control" name="customerName" id="customerName" placeholder="Enter customer's name">
         <div class="row">
 
 

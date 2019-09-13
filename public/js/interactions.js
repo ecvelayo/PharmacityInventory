@@ -16,8 +16,6 @@ $(document).ready(function(){
                 window.location.reload();
             })
         })
-
-
     })
     $("#item").on("keyup", function(){
         var value = $(this).val().toLowerCase();
@@ -34,18 +32,23 @@ $(document).ready(function(){
        newcell2.innerHTML = document.getElementById("quantity").value;
     })
     $("#passlist").click(function(){
-        var EntryRowCount = ($("#cartTable td").closest("tr").length)*2;
+        var EntryRowCount = ($("#cartTable td").closest("tr").length);
         var table = "#cartTable tr";
-        var x = 1;
+        var x = 0;
         var items = [];
         var quantity = [];
         $(table).each(function(){
             $(this).find("input").each(function(){
                 quantity.push($(this).val());
-            })
+            }) 
         })
+        for (var i=0; i < EntryRowCount; i++){
+            items.push($(table).find("td").eq(x).html());
+            x=x+2;
+        }
         //can access data only in first input cell in cartTable. Find way to access data on all value cells.
         var objectpassable = {};
+        objectpassable.customerName = $("#customerName").val();
         objectpassable.item = items;
         objectpassable.quantity = quantity;
         $.ajax({
@@ -54,8 +57,9 @@ $(document).ready(function(){
             data: objectpassable
         });
         $(document).ajaxStop(function(){
-        })
-    })
+            //window.location.reload();
+        });
+    });
     //access data in table cells to autofill in edit product modal
     //accessing the data in the existing table in HTML
     $("table tbody").on("click", ".edititem", function(){

@@ -75,6 +75,9 @@ $(document).ready(function(){
         $("#sellingprice").val(cur.find("td:eq(5)").text());
         $("#productsupplier").val(cur.find("td:eq(6)").text());
     })
+    $(".details").click(function(){
+        window.location=("/transactiondetails?id="+$(this).data("id"));
+    })
     $( function(){
         $("#datepicker").datepicker({
             dateFormat: "yy-mm-dd",

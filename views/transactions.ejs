@@ -56,13 +56,16 @@
 <br><br><br>
 <table class="center table-bordered text-center">
 <tr>
+    <th>Transaction Number</th>
     <th>User</th>
     <th>Customer</th>
 </tr>
 <%data.forEach(function(dataa){%>
 <tr>
+    <td><%=dataa.id%></td>
     <td><%=dataa.user_id%></td>
     <td><%=dataa.customer_name%></td>
+    <td><button data-id="<%=dataa.id%>" class="details .btn-info" >Details</button></td>
 </tr>
 <%})
 //}%>

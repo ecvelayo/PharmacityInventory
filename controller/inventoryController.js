@@ -55,6 +55,13 @@ module.exports = function(app){
             })
             res.redirect("/products");
         })
+        app.get("/transactiondetails", urlencodedParser, function(req, res){
+            var id = req.query.id;
+            var sql = "SELECT * FROM transactionitems WHERE transaction_id="+id;
+            connection.query(sql, function(err, result){
+                res.send(result);
+            })
+        })
         app.post("/productsupdate", urlencodedParser, function(req, res){
             var sql = "SELECT * FROM product WHERE id = ?";
             connection.query(sql, req.body.id,function(err, result){
@@ -108,12 +115,13 @@ module.exports = function(app){
 
             //var sql = "SELECT T.quantity, S.selling_price, CQ.current_quantity, C.name,A.username FROM [transaction] T JOIN customer C ON T.ID";
             var sql = "SELECT * FROM transaction";
-            //
             var sql1 = "SELECT * FROM product";
+            var sql2 = "SELECT * FROM transactionitems"
             connection.query(sql, function(err,result){
-              //console.log(result);
-              connection.query(sql1, function(err,result1){
-                res.render("transactions", {data:result, products:result1});
+              connection.query(sql1, function(err,result1){ 
+                connection.query(sql2, function(err, result2){
+                    res.render("transactions", {data:result, products:result1, details:result2});
+                })
               });
             });
 

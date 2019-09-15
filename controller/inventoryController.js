@@ -55,13 +55,6 @@ module.exports = function(app){
             })
             res.redirect("/products");
         })
-        app.get("/transactiondetails", urlencodedParser, function(req, res){
-            var id = req.query.id;
-            var sql = "SELECT * FROM transactionitems WHERE transaction_id="+id;
-            connection.query(sql, function(err, result){
-                res.send(result);
-            })
-        })
         app.post("/productsupdate", urlencodedParser, function(req, res){
             var sql = "SELECT * FROM product WHERE id = ?";
             connection.query(sql, req.body.id,function(err, result){
@@ -151,7 +144,15 @@ module.exports = function(app){
                 }
             })
         });
-
+        app.get("/transactiondetails", urlencodedParser, function(req, res){
+              var sql = "SELECT * FROM transactionitems WHERE transaction_id="+req.query.id+";";
+              connection.query(sql, function(err, result){
+                var sql = "SELECT * FROM transaction WHERE id="+req.query.id+";";
+                connection.query(sql, function(err, result1){
+                  res.render("transactiondetails", {data:result, data1: result1});  
+                })
+              })
+        });
 
 //         app.get("/deletee", function(req,res){
 //            var sql = "SELECT * FROM products WHERE id = ?";

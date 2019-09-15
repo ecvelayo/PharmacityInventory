@@ -56,8 +56,8 @@ $(document).ready(function(){
             url: "addtransactions",
             data: objectpassable
         });
-        $(document).ajaxStop(function(){
-            //window.location.reload();
+        $(document).ajaxStop(function(){    
+            window.location.reload();
         });
     });
     //access data in table cells to autofill in edit product modal

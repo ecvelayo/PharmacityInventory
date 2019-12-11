@@ -36,28 +36,42 @@ $(document).ready(function(){
         var table = "#cartTable tr";
         var x = 0;
         var items = [];
+        var itemid = [];
         var quantity = [];
+        //grabbing input data of quantity for items in cart
         $(table).each(function(){
             $(this).find("input").each(function(){
                 quantity.push($(this).val());
             }) 
         })
+        //grabbing data from cart to add to sent data at backend for DB and POST interactions
         for (var i=0; i < EntryRowCount; i++){
-            items.push($(table).find("td").eq(x).html());
-            x=x+2;
+            itemid.push($(table).find("td").eq(x).html());
+            items.push($(table).find("td").eq(x+1).html());
+            //4 interval used because each table row has 4 elements, basically skipping through each row after grabbing data from the said row
+            x=x+4;
         }
+//        for (var i=0; i < EntryRowCount; i++){
+//            itemid.push($(table).find("td").eq(x).html());
+//            x=x+1;
+//        }
         //can access data only in first input cell in cartTable. Find way to access data on all value cells.
         var objectpassable = {};
         objectpassable.customerName = $("#customerName").val();
         objectpassable.item = items;
+        objectpassable.itemid = itemid;
         objectpassable.quantity = quantity;
+        console.log(objectpassable);
         $.ajax({
             type: "POST",
             url: "addtransactions",
-            data: objectpassable
-        });
-        $(document).ajaxStop(function(){    
-            window.location.reload();
+            data: objectpassable,
+            //success now functions given that backend sends success code for interpretation
+            success : function(response){
+                $("#transactionModal").modal("hide");
+                $("#confirm-insert").modal("show"); 
+                window.location.reload();
+            }
         });
     });
     //access data in table cells to autofill in edit product modal
@@ -78,7 +92,7 @@ $(document).ready(function(){
     $(".details").click(function(){
         window.location=("/transactiondetails?id="+$(this).data("id"));
     })
-    $( function(){
+    $(function(){
         $("#datepicker").datepicker({
             dateFormat: "yy-mm-dd",
             beforeShow: function(input, inst)
@@ -87,6 +101,20 @@ $(document).ready(function(){
             }
         });
     });
+//to pull data from database upon clicking of transaction details button
+//    $(".details").click(function(){
+//        var ajax = $.ajax({
+//            type: "GET",
+//            url: "transactiondetails?id="+$(this).data("id"),
+//            data: $(this).data("id"),
+//            success:function(){
+//                console.log("Test");
+//            },
+//            error: function(data){
+//                alert("Error");
+//            }
+//            });
+//    });
 //        console.log("Row is " + $(this).closest("td").parent()[0].sectionRowIndex);
 //        console.log($(this).closest("td").parent()[0].sectionRowIndex);
 //        var $row = jQuery(this).closest("tr");

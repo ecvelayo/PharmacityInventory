@@ -25,7 +25,7 @@ module.exports = function(app){
             });
         })
         app.get("/home", urlencodedParser, function(req, res){
-            var sql ="SELECT * FROM product ORDER BY current_quantity";
+            var sql ="SELECT * FROM product ORDER BY current_quantity LIMIT 5";
             connection.query(sql, function(err, result){
                 res.render("adminview", {data:result})
             });
@@ -120,7 +120,8 @@ module.exports = function(app){
 
         });
         app.post("/addtransactions", urlencodedParser, function(req,res){
-            var name = req.body.customerName.toLowerCase();
+            var name = req.body.customerName.toUpperCase();
+            //var sql = "SELECT * from product";
             var sql = "INSERT INTO transaction SET ?;";
             var sql1 = "";
             var inserted = 0;
@@ -130,26 +131,39 @@ module.exports = function(app){
             }
             connection.query(sql, set, function(err, result){
                 inserted = result.insertId;
-                var sql = "INSERT INTO transactionitems SET ?;"
+                var sql = "INSERT INTO transactionitems SET ?;";
                 for (var i=0; i < req.body['quantity[]'].length; i++){
-
                     var set = {
                         transaction_id: inserted,
                         item: req.body['item[]'][i],
                         quantity: req.body['quantity[]'][i]
                     }
                     connection.query(sql, set, function(err, result){
+                        console.log(sql, set)
                         if (err) throw err;
                     })
+                }   
+                for (var i=0; i < req.body['quantity[]'].length; i++){
+                        var sql = "UPDATE product SET current_quantity = current_quantity - "+req.body['quantity[]'][i]+" WHERE product_id="+req.body['itemid[]'][i];
+                    connection.query(sql, function(err,result){
+                        if(err) throw err;
+                    })
                 }
+                var response = {
+                    status: 200,
+                    success: "New transaction added!"
+                }
+                res.end(JSON.stringify(response));
             })
         });
         app.get("/transactiondetails", urlencodedParser, function(req, res){
               var sql = "SELECT * FROM transactionitems WHERE transaction_id="+req.query.id+";";
+              console.log(sql);
               connection.query(sql, function(err, result){
                 var sql = "SELECT * FROM transaction WHERE id="+req.query.id+";";
                 connection.query(sql, function(err, result1){
                   res.render("transactiondetails", {data:result, data1: result1});  
+                    console.log(result);
                 })
               })
         });

@@ -18,10 +18,21 @@ $(document).ready(function(){
         })
     })
     $("#item").on("keyup", function(){
-        var value = $(this).val().toLowerCase();
-        $("#myTable tr").filter(function() {
-        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        });
+//        var value = $(this).val().toLowerCase();
+//        $("#myTable tr").filter(function() {
+//        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+//        });
+    setTimeout(2000);
+    var checkname = $(this).val();
+    $.ajax({
+        type: "GET",
+        url: "/searchitem?keyword="+checkname,
+        success: function(result)
+        {
+            console.log(result);    
+        }
+    })
+    
     });
     $("#additemtransaction").click(function(){
        var myTable=document.getElementById("cart").getElementsByTagName("tbody")[0];

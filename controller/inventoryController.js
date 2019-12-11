@@ -33,12 +33,18 @@ module.exports = function(app){
         app.get("/products", function(req, res){
             var sql = "SELECT * FROM product ORDER BY product_name";
             connection.query(sql, function(err, result){
+            for (var i=0; i < result.length; i++){    
+                //interprets decimal value into currency
+                result[i].selling_price = result[i].selling_price.toFixed(2);
+            }
+                console.log(result);                
                 res.render("productview", {data:result});
             });
         })
         //add new row to table
         //adds new product to the products table
         app.post("/products", urlencodedParser, function(req, res){
+            console.log(req.body.sellingprice);
             var sql = "INSERT INTO product SET ?" ;
             var insert = {
                 product_name: req.body.productname,
@@ -47,9 +53,9 @@ module.exports = function(app){
                 prod_generic_name: req.body.genericname,
                 current_quantity: req.body.quantity,
                 selling_price: req.body.sellingprice,
+                date_expiry: req.body.expirydate
             }
-            insert.selling_price = parseFloat(insert.selling_price);
-            connection.query(sql, insert, function(err, result){
+                connection.query(sql, insert, function(err, result){
                 if (err) throw err;
                 console.log(typeof insert.selling_price);
             })
@@ -119,7 +125,20 @@ module.exports = function(app){
             });
 
         });
+        app.get("/searchitem", function(req, res){
+            var sql = "SELECT * FROM product WHERE product_name ='"+req.query.keyword+"'";
+            console.log(sql);
+            connection.query(sql, function(err, result){
+                console.log("Result " + result);
+            })
+            var response = {
+                status: 200,
+                success: "New transaction added!"
+            }
+            res.end(JSON.stringify(response));
+        })
         app.post("/addtransactions", urlencodedParser, function(req,res){
+            console.log(req.body);
             var name = req.body.customerName.toUpperCase();
             //var sql = "SELECT * from product";
             var sql = "INSERT INTO transaction SET ?;";
@@ -131,6 +150,25 @@ module.exports = function(app){
             }
             connection.query(sql, set, function(err, result){
                 inserted = result.insertId;
+                //this is done because quantity[] becomes a string when there is only one value and turns into an object when there are multiple values. A different scheme of sql insertion is done to cater to this fact.
+                if (typeof req.body['quantity[]'] == 'string'){
+                    console.log("TEST");
+                    var sql = "INSERT INTO transactionitems SET ?;";
+                    var set = {
+                        transaction_id: inserted,
+                        item: req.body['item[]'],
+                        quantity: req.body['quantity[]']
+                    }
+                    connection.query(sql, set, function(err, result){
+                        if (err) throw err;
+                    });
+                    var sql = "UPDATE product SET current_quantity = current_quantity - "+req.body['quantity[]']+" WHERE product_id="+req.body['itemid[]'];
+                    connection.query(sql, function(err, result){
+                        if (err) throw err;
+                    })
+                }
+                //this now caters to the instance of quantity[] turning into an object
+                else{
                 var sql = "INSERT INTO transactionitems SET ?;";
                 for (var i=0; i < req.body['quantity[]'].length; i++){
                     var set = {
@@ -139,15 +177,16 @@ module.exports = function(app){
                         quantity: req.body['quantity[]'][i]
                     }
                     connection.query(sql, set, function(err, result){
-                        console.log(sql, set)
                         if (err) throw err;
                     })
-                }   
+                }
                 for (var i=0; i < req.body['quantity[]'].length; i++){
-                        var sql = "UPDATE product SET current_quantity = current_quantity - "+req.body['quantity[]'][i]+" WHERE product_id="+req.body['itemid[]'][i];
+                    var sql = "UPDATE product SET current_quantity = current_quantity - "+req.body['quantity[]'][i]+" WHERE product_id="+req.body['itemid[]'][i];
+                    console.log(sql);
                     connection.query(sql, function(err,result){
                         if(err) throw err;
                     })
+                }
                 }
                 var response = {
                     status: 200,
@@ -163,7 +202,6 @@ module.exports = function(app){
                 var sql = "SELECT * FROM transaction WHERE id="+req.query.id+";";
                 connection.query(sql, function(err, result1){
                   res.render("transactiondetails", {data:result, data1: result1});  
-                    console.log(result);
                 })
               })
         });

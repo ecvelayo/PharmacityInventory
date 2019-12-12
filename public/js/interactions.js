@@ -51,6 +51,7 @@ $(document).ready(function(){
         var EntryRowCount = ($("#cartTable td").closest("tr").length);
         var table = "#cartTable tr";
         var x = 0;
+        var subtotal = 0;
         //grabbing input data of quantity for items in cart
         $(table).each(function(){
             $(this).find("input").each(function(){
@@ -62,6 +63,8 @@ $(document).ready(function(){
             itemid.push($(table).find("td").eq(x).html());
             items.push($(table).find("td").eq(x+1).html());
             prices.push($(table).find("td").eq(x+3).html());
+            subtotal = subtotal + (prices[i] * quantity[i]);
+            console.log(subtotal);
             //6 interval used because each table row has 6 elements, basically skipping through each row after grabbing data from the said row
             x=x+6;
         }
@@ -76,18 +79,19 @@ $(document).ready(function(){
         objectpassable.itemid = itemid;
         objectpassable.quantity = quantity;
         objectpassable.prices = prices;
+        objectpassable.subtotal = subtotal;
         console.log(objectpassable);
-//        $.ajax({
-//            type: "POST",
-//            url: "addtransactions",
-//            data: objectpassable,
-//            //success now functions given that backend sends success code for interpretation
-//            success : function(response){
-//                $("#transactionModal").modal("hide");
-//                $("#confirm-insert").modal("show"); 
-//                window.location.reload();
-//            }
-//        });
+        $.ajax({
+            type: "POST",
+            url: "addtransactions",
+            data: objectpassable,
+            //success now functions given that backend sends success code for interpretation
+            success : function(response){
+                $("#transactionModal").modal("hide");
+                $("#confirm-insert").modal("show"); 
+                window.location.reload();
+            }
+        });
     });
     $("body").on("keyup",".quantityItemInCart", function(){
         var EntryRowCount = ($("#cartTable td").closest("tr").length);

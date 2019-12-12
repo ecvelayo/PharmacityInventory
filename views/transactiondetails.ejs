@@ -61,6 +61,7 @@
         <tr>
             <th>Product Name</th>
             <th>Product Quantity</th>
+            <th>Product Price</th>
         </tr>
     </thead>
     <% for (var i=0; i<data.length; i++){%>
@@ -68,12 +69,14 @@
         <tr>
             <td><%=data[i].item%></td>
             <td><%=data[i].quantity%></td>
+            <td><%=data[i].price%></td>
         </tr>
     </tbody>
     <%}%>
 </table>
 <br><br>
 <div style="text-align:center;">
+<p>Subtotal: <%=data1[0].subtotal%></p>
 <button><a href="/transactions">Back</a></button>
 </div>
 

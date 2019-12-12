@@ -146,18 +146,19 @@ module.exports = function(app){
             var inserted = 0;
             var set = {
                 user_id: 1,
-                customer_name: name
+                customer_name: name,
+                subtotal: req.body.subtotal
             }
             connection.query(sql, set, function(err, result){
                 inserted = result.insertId;
                 //this is done because quantity[] becomes a string when there is only one value and turns into an object when there are multiple values. A different scheme of sql insertion is done to cater to this fact.
                 if (typeof req.body['quantity[]'] == 'string'){
-                    console.log("TEST");
                     var sql = "INSERT INTO transactionitems SET ?;";
                     var set = {
                         transaction_id: inserted,
                         item: req.body['item[]'],
-                        quantity: req.body['quantity[]']
+                        quantity: req.body['quantity[]'],
+                        price: req.body['prices[]']
                     }
                     connection.query(sql, set, function(err, result){
                         if (err) throw err;
@@ -174,7 +175,8 @@ module.exports = function(app){
                     var set = {
                         transaction_id: inserted,
                         item: req.body['item[]'][i],
-                        quantity: req.body['quantity[]'][i]
+                        quantity: req.body['quantity[]'][i],
+                        price: req.body['prices[]'][i]
                     }
                     connection.query(sql, set, function(err, result){
                         if (err) throw err;
@@ -199,6 +201,10 @@ module.exports = function(app){
               var sql = "SELECT * FROM transactionitems WHERE transaction_id="+req.query.id+";";
               console.log(sql);
               connection.query(sql, function(err, result){
+              for (var i=0; i < result.length; i++){    
+                //interprets decimal value into currency
+                result[i].price = result[i].price.toFixed(2);
+              }
                 var sql = "SELECT * FROM transaction WHERE id="+req.query.id+";";
                 connection.query(sql, function(err, result1){
                   res.render("transactiondetails", {data:result, data1: result1});  

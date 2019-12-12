@@ -1,3 +1,8 @@
+//Declared as global as the variables will be used in more than one function
+var items = [];
+var itemid = [];
+var prices = [];
+var quantity = [];
 $(document).ready(function(){
     $(".deleteItem").click(function(){
         var pass = $(this).data("id");
@@ -46,9 +51,6 @@ $(document).ready(function(){
         var EntryRowCount = ($("#cartTable td").closest("tr").length);
         var table = "#cartTable tr";
         var x = 0;
-        var items = [];
-        var itemid = [];
-        var quantity = [];
         //grabbing input data of quantity for items in cart
         $(table).each(function(){
             $(this).find("input").each(function(){
@@ -59,8 +61,9 @@ $(document).ready(function(){
         for (var i=0; i < EntryRowCount; i++){
             itemid.push($(table).find("td").eq(x).html());
             items.push($(table).find("td").eq(x+1).html());
-            //4 interval used because each table row has 4 elements, basically skipping through each row after grabbing data from the said row
-            x=x+4;
+            prices.push($(table).find("td").eq(x+3).html());
+            //6 interval used because each table row has 6 elements, basically skipping through each row after grabbing data from the said row
+            x=x+6;
         }
 //        for (var i=0; i < EntryRowCount; i++){
 //            itemid.push($(table).find("td").eq(x).html());
@@ -72,19 +75,47 @@ $(document).ready(function(){
         objectpassable.item = items;
         objectpassable.itemid = itemid;
         objectpassable.quantity = quantity;
+        objectpassable.prices = prices;
         console.log(objectpassable);
-        $.ajax({
-            type: "POST",
-            url: "addtransactions",
-            data: objectpassable,
-            //success now functions given that backend sends success code for interpretation
-            success : function(response){
-                $("#transactionModal").modal("hide");
-                $("#confirm-insert").modal("show"); 
-                window.location.reload();
-            }
-        });
+//        $.ajax({
+//            type: "POST",
+//            url: "addtransactions",
+//            data: objectpassable,
+//            //success now functions given that backend sends success code for interpretation
+//            success : function(response){
+//                $("#transactionModal").modal("hide");
+//                $("#confirm-insert").modal("show"); 
+//                window.location.reload();
+//            }
+//        });
     });
+    $("body").on("keyup",".quantityItemInCart", function(){
+        var EntryRowCount = ($("#cartTable td").closest("tr").length);
+        var prices = [];
+        var quantity = [];
+        var table = "#cartTable tr";
+        var x = 0;
+        var subtotal = 0;
+        var subtotalDisplay = "";
+        //grabbing input data of quantity for items in cart
+        $(table).each(function(){
+            $(this).find("input").each(function(){
+                quantity.push($(this).val());
+            }) 
+        })
+        //grabbing data from cart to add to sent data at backend for DB and POST interactions
+        for (var i=0; i < EntryRowCount; i++){
+            prices.push($(table).find("td").eq(x+3).html());
+            //6 interval used because each table row has 6 elements, basically skipping through each row after grabbing data from the said row
+            x=x+6;
+        }
+        for (var i = 0; i < prices.length; i++){
+            subtotal = subtotal + (prices[i] * quantity[i]);
+        }
+        subtotalDisplay = parseFloat(subtotal).toFixed(2);
+        $("#subtotal").text("Subtotal = "+subtotalDisplay);
+    })
+
     //access data in table cells to autofill in edit product modal
     //accessing the data in the existing table in HTML
     $("table tbody").on("click", ".edititem", function(){
@@ -100,9 +131,20 @@ $(document).ready(function(){
         $("#sellingprice").val(cur.find("td:eq(5)").text());
         $("#productsupplier").val(cur.find("td:eq(6)").text());
     })
+    //redirection of page to transaction details of button clicked
     $(".details").click(function(){
         window.location=("/transactiondetails?id="+$(this).data("id"));
     })
+    //would need to show the subtotal based on the input quantity of items in cart
+    $(".quantityItemInCart").on("keyup", function(){
+        var items=[];
+        var itemid=[];
+        var table = "#cart tr";
+        itemid.push($(table).find("td").eq(x).html());
+        items.push($(table).find("td").eq(x+1).html());
+        console.log(itemid, items);
+        $("#subtotal").text("Subtotal = ");
+    });
     $(function(){
         $("#datepicker").datepicker({
             dateFormat: "yy-mm-dd",

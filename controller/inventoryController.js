@@ -205,34 +205,6 @@ module.exports = function(app){
                 })
               })
         });
+        });
+    };
 
-//         app.get("/deletee", function(req,res){
-//            var sql = "SELECT * FROM products WHERE id = ?";
-//            connection.query(sql, req.query.id, function(err, result){
-//                if (err) throw err;
-//                var sql = "INSERT INTO deletedproducts SET ?";
-//                var insert = {
-//                    product_id: req.query.id,
-//                    name: result[0].name,
-//                    description: result[0].description,
-//                    price: result[0].price,
-//                    stock: result[0].stock,
-//                    model: result[0].model,
-//                    date_added: result[0].date_arrived,
-//                    sold: result[0].sold
-//                }
-//                connection.query(sql, insert, function(err, resultt){
-//                    var sql = "DELETE FROM products WHERE id = ?";
-//                    connection.query(sql, req.query.id, function(err, result){
-////                        connection.query("SELECT * FROM products", function(err,result){
-////                            res.render("productview", {data:result});
-////                        })
-//
-//                    })
-//                })
-//            })
-//             res.redirect('/home');
-//        })
-
-    });
-};

@@ -18,6 +18,16 @@
   text-decoration: none;
   font-size: 17px;
 }
+.bottomcenter {
+    position:absolute;
+    width:30%;
+    height:10%;
+    background:#26e80c;
+    bottom:20%;
+    right:35%;
+    left:35%;
+    text-align: center;
+}
 
 .topnav a:hover {
   background-color: #ddd;
@@ -36,18 +46,27 @@
     float: left;
     position: relative;
 }
-.topleft {
+.topright {
     position: fixed;
     width: 50%;
-    height: 30%;
-    top: 10%;
-    left: 48%;
+    height: 35%;
+    top: 8%;
+    right: 1%;
     border: active;
+    overflow: auto;
+}
+.topleft {
+    position: fixed;
+    width: 45%;
+    height: 35%;
+    top: 8%;
+    left: 1%;
+    border: active;
+    overflow: auto;
 }
 .tabletopleft{
     width: 100%;
-    height: 70%;
-    display: block;
+    height: 40%;
 }
 </style>
 <div class="topnav">
@@ -62,37 +81,64 @@
 <h2>Hello, Admin!</h2>
 </div>
 -->
-<div class="topleft">
-    <br><h1 class="center" style="background:#ff4d4d">Check Stocks</h1>
+<div class="topright">
+    <br><h1 class="center" style="background:#19d15d">Check Stocks</h1>
     <% if (data.length <= 0) {%>
         <h1>No warnings.</h1>
     <%}else {%>
 <table class="center table-bordered text-center tabletopleft">    
 <tr>
+    <th style="background:#33ccff">Product ID</th>
     <th style="background:#33ccff">Product Name</th>
     <th style="background:#33ccff">Category</th>
     <th style="background:#33ccff">Generic Name</th>
     <th style="background:#33ccff">Current Stock</th>
     <th style="background:#33ccff">Purchase Price</th>
-    <th style="background:#33ccff">Selling Supplier</th>
     <th style="background:#33ccff">Product Supplier</th>
     <th style="background:#33ccff">Expiration Date</th>
 </tr>
 <% for (var i = 0; i <data.length; i++){%>
 <tr>
+    <td><%=data[i].product_id%></td>
     <td><%=data[i].product_name%></td>
     <td><%=data[i].product_category%></td>
     <td><%=data[i].prod_generic_name%></td>
     <td><%=data[i].current_quantity%></td>
-    <td><%=data[i].purchase_price%></td>
     <td><%=data[i].selling_price%></td>
-    <td><%=data[i].product_supplier%></td>
-    <td><%=data[i].expiration_date%></td>
+    <td><%=data[i].product_manufacturer%></td>
+    <td><%=data[i].date_expiry%></td>
 </tr>
 <%}%>
 </table>
-    <br>
-    <p align="center"> Check </p>
 </div>
+<div class="topleft">
+    <br><h1 class="center" style="background:#e8b10c">Recent Transactions</h1>
+    <% if (data.length <= 0) {%>
+        <h1>No warnings.</h1>
+    <%}else {%>
+<table class="center table-bordered text-center tabletopleft">    
+<tr>
+    <th style="background:#33ccff">Transaction ID</th>
+    <th style="background:#33ccff">Customer Name</th>
+    <th style="background:#33ccff">Date</th>
+    <th style="background:#33ccff">Subtotal</th>
+    <th style="background:#33ccff">Details</th>
+
+</tr>
+<% for (var i = 0; i <data1.length; i++){%>
+<tr>
+    <td><%=data1[i].id%></td>
+    <td><%=data1[i].customer_name%></td>
+    <td><%=data1[i].date%></td>
+    <td><%=data1[i].subtotal%></td>
+    <td><button id="modaldetails" data-id="<%=data1[i].id%>" class="details .btn-info" >Details</button></td>
+</tr>
+<%}%>
+</table>
+</div>
+<div class="bottomcenter">
+<h2>Total Sales for the Day = <%=subtotal1%></h2>
+</div>
+<%}%>
 <%}%>
 <% include templates/footer.ejs %>

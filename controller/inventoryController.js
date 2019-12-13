@@ -27,7 +27,21 @@ module.exports = function(app){
         app.get("/home", urlencodedParser, function(req, res){
             var sql ="SELECT * FROM product ORDER BY current_quantity LIMIT 5";
             connection.query(sql, function(err, result){
-                res.render("adminview", {data:result})
+                var sql = "SELECT * FROM transaction ORDER BY date DESC LIMIT 10";
+                connection.query(sql, function(err, result1){
+                    for (var i=0; i<result1.length; i++){
+                        result1[i].date = result1[i].date.toDateString();
+                    }
+                    var sql ="SELECT * FROM transaction WHERE DATE(date) = CURDATE()";
+                    var subtotal = 0;
+                    connection.query(sql, function(err, result2){
+                        for (var i=0; i<result2.length; i++){
+                            subtotal = result2[i].subtotal+subtotal;
+                        }
+                        console.log(subtotal);
+                        res.render("adminview", {data:result, data1:result1, subtotal1:subtotal.toFixed(2)});
+                    });
+                });
             });
         });
         app.get("/products", function(req, res){

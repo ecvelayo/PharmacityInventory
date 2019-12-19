@@ -1,0 +1,250 @@
+<% include templates/header.ejs %>
+<style>
+.center{
+    margin: auto;
+    width: 70%;
+    text-align:center;
+}
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+.button {
+    margin: auto;
+    display: block;
+}
+.inline{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    float:left;
+    margin-right: 50px;;
+}
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #4CAF50;
+  color: white;
+}
+.logo-img {
+    height: auto;
+    width: auto;
+    max-height: 100px;
+    max-width: 150px;
+    float: left;
+    position: relative;
+}
+</style>
+<div class="topnav">
+    <img class="logo-img" src="/images/inventory-management-system-logo.png" alt="logo">
+  <a href="clerkproducts">Products</a>
+  <a class="active" href="clerktransactions">Transactions</a>
+</div>
+<br><br><br>
+<table class="center table-bordered text-center">
+<tr>
+    <th>Transaction Number</th>
+    <th>User</th>
+    <th>Customer</th>
+    <th>Options</th>
+</tr>
+<%data.forEach(function(dataa){%>
+<tr>
+    <td><%=dataa.id%></td>
+    <td><%=dataa.user_id%></td>
+    <td><%=dataa.customer_name%></td>
+    <td><button id="modaldetails" data-id="<%=dataa.id%>" class="clerkdetails .btn-info" >Details</button></td>
+</tr>
+<%})
+//}%>
+</table>
+<br><br>
+<button id="addtransaction" class="btn-primary button" data-toggle="modal" data-target="#transactionModal">New Transaction</button>
+<!--modal for products bought by client in said transaction-->
+<div class="modal fade" id="productsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add New Transaction</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    <form role="form" method="POST" action="/addtransaction">
+      <div class="modal-body">
+            <div class="form-group">
+                <label for="productname">Customer Name</label>
+                <input type="text" class="form-control" name="customerName" placeholder="Enter customer's name">
+            </div>
+            <div class="form-group inline dropdown">
+                <label for="description">Item</label>
+                <select id="choices" name="choice">
+                    <% //for (var i = 0; i<data[1].length;i++){
+                      products.forEach(function(product){%>
+                    <option value = <%=product.id%>>
+                        <%=product.name%>
+                    </option>
+                    <%})%>
+                </select>
+            </div>
+            <div class="form-group inline">
+                <input type="text" class="form-control" name="noOfItems" placeholder="Number of items">
+            </div>
+      </div>
+      <div class="modal-footer">
+          <input type="submit" value="Add"/>
+      </div>
+        </form>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="transactionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Item Search</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+<!--<form role="form" method="POST" action="/addtransaction">
+            </div>
+            <div class="form-group inline dropdown">
+                <label for="description">Item</label>
+                <select id="choices" name="item_choice">
+
+                    <% //for (var i = 0; i<data[1].length;i++){
+                      //products.forEach(function(product){%>
+                    </option value = <%=//product.product_id%>>
+                        <%=//product.product_name%>
+                    </option>
+                    <%//})%>
+                </select>
+            </div>
+            <div class="form-group inline">
+                <input type="text" class="form-control" name="noOfItems" placeholder="Number of items">
+            </div>
+-->
+
+        <div class="row">
+            <div class="col-sm-6">
+                <label for="items">Items</label>
+                <input type="text" class="form-control" name="item" id="item" placeholder="Enter item">
+            </div>
+
+        </div>
+      <br>
+      <table class="center table-bordered text-center" width ="40%" id="cart">
+        <thead>
+            <th>Product ID</th>
+            <th>Product Name</th>
+            <th>In Stock</th>
+            <th>Price</th>
+            <th>Details</th>
+        </thead>
+        <tbody id="myTable">
+          <%products.forEach(function(oneD){%>
+          <tr>
+            <td><%=oneD.product_id%></td>
+            <td><%=oneD.product_name%></td>
+            <td><%=oneD.current_quantity%></td>
+            <td><%=oneD.selling_price%></td>
+            <td><button class="add-roww" onclick="add2Cart('<%=oneD.product_id%>','<%=oneD.product_name%>','<%=oneD.current_quantity%>','<%=oneD.selling_price%>');" >Add</button></td>
+          </tr>
+
+          <%});%>
+        </tbody>
+      </table>
+<!--</form>Changing Transaction Type to suit multiple items at once-->
+      </div>
+
+
+      <div class="modal-footer">
+          <input type="button" value="Add To Cart"/>
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="modal-dialog" id="transactions" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Cart</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+                <label for="productname">Customer Name</label>
+                <input type="text" class="form-control" name="customerName" id="customerName" placeholder="Enter customer's name">
+        <div class="row">
+
+
+        </div>
+      <br>
+      <table class="center table-bordered text-center" id="cart">
+        <thead>
+            <th>Product ID</th>
+            <th>Product Name</th>
+            <th width="10%">Quantity</th>
+            <th>Price per Unit</th>
+        </thead>
+        <tbody id="cartTable">
+
+        </tbody>
+      </table>
+<!--</form>Changing Transaction Type to suit multiple items at once-->
+      </div>
+
+
+      <div class="modal-footer">
+          <p class="mr-auto" id="subtotal">Subtotal: </p><input type="button" id="passlist" value="Proceed with Transaction"/>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="confirm-insert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Insert Success!
+            </div>
+            <div class="modal-body">
+                Insert Success!
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+function add2Cart(id,name,stock,price){
+            var markup = "<tr><td>"+id+"</td><td>"+name+"</td><td><input class='quantityItemInCart' type='number' min='1' max='"+stock+" value='1'/></td></td><td>"+price+"</td><td><td><button class='delRow' onclick='deleteRow(this);'>Remove</button></td></tr>";
+            $("#cartTable").append(markup);
+};
+function deleteRow(r){
+    var i = r.parentNode.parentNode.rowIndex-1;
+    console.log(i);
+    document.getElementById("cartTable").deleteRow(i);
+}
+</script>
+
+<% include templates/footer.ejs %>

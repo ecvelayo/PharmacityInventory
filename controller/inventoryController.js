@@ -22,6 +22,9 @@ module.exports = function(app){
                 if (fields[0].account_type == "admin"){
                         res.redirect("/home");
                 }
+                if (fields[0].account_type == "clerk"){
+                    res.redirect("/clerkproducts");
+                }
             });
         })
         app.get("/home", urlencodedParser, function(req, res){
@@ -55,6 +58,46 @@ module.exports = function(app){
                 res.render("productview", {data:result});
             });
         })
+        app.get("/clerkproducts", function(req, res){
+            var sql = "SELECT * FROM product ORDER BY product_name";
+            connection.query(sql, function(err, result){
+            for (var i=0; i < result.length; i++){    
+                //interprets decimal value into currency
+                result[i].selling_price = result[i].selling_price.toFixed(2);
+            }
+                console.log(result);                
+                res.render("clerkproductview", {data:result});
+            });
+        })
+        app.get("/clerktransactions", function(req, res){
+
+            //var sql = "SELECT T.quantity, S.selling_price, CQ.current_quantity, C.name,A.username FROM [transaction] T JOIN customer C ON T.ID";
+            var sql = "SELECT * FROM transaction";
+            var sql1 = "SELECT * FROM product";
+            var sql2 = "SELECT * FROM transactionitems"
+            connection.query(sql, function(err,result){
+              connection.query(sql1, function(err,result1){ 
+                connection.query(sql2, function(err, result2){
+                    res.render("clerktransactions", {data:result, products:result1, details:result2});
+                })
+              });
+            });
+
+        });
+        app.get("/clerktransactiondetails", urlencodedParser, function(req, res){
+              var sql = "SELECT * FROM transactionitems WHERE transaction_id="+req.query.id+";";
+              console.log(sql);
+              connection.query(sql, function(err, result){
+              for (var i=0; i < result.length; i++){    
+                //interprets decimal value into currency
+                result[i].price = result[i].price.toFixed(2);
+              }
+                var sql = "SELECT * FROM transaction WHERE id="+req.query.id+";";
+                connection.query(sql, function(err, result1){
+                  res.render("clerktransactiondetails", {data:result, data1: result1});  
+                })
+              })
+        });
         //add new row to table
         //adds new product to the products table
         app.post("/products", urlencodedParser, function(req, res){

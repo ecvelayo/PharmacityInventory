@@ -139,6 +139,9 @@ $(document).ready(function(){
     $(".details").click(function(){
         window.location=("/transactiondetails?id="+$(this).data("id"));
     })
+    $(".clerkdetails").click(function(){
+        window.location=("/clerktransactiondetails?id="+$(this).data("id"));
+    })
     //would need to show the subtotal based on the input quantity of items in cart
     $(".quantityItemInCart").on("keyup", function(){
         var items=[];
